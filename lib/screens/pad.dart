@@ -1,9 +1,10 @@
 import 'package:controll_me_daddy/components/game_button.dart';
+import 'package:controll_me_daddy/models/button_dto.dart';
 import 'package:flutter/material.dart';
 
 class Pad extends StatefulWidget {
-  final List<String> values;
-  final ValueSetter<String> onPress;
+  final List<int> values;
+  final ValueSetter<ButtonDto> onPress;
   const Pad({super.key, required this.onPress, required this.values});
 
   @override
@@ -16,12 +17,12 @@ class _PadState extends State<Pad> {
     super.initState();
   }
 
-  void onTapUp(String value) {
-    print(value);
+  void onTapUp(ButtonDto value) {
+    widget.onPress(value);
   }
 
-  void onTapDown(String value) {
-    print(value);
+  void onTapDown(ButtonDto value) {
+    widget.onPress(value);
   }
 
   @override
@@ -37,13 +38,13 @@ class _PadState extends State<Pad> {
           const SizedBox(height: 20),
           const SizedBox(height: 20),
           GameButton(
-            onTapUp: (value) {
+            onTapUp: (ButtonDto value) {
               onTapUp(value);
             },
-            onTapDown: (value) {
+            onTapDown: (ButtonDto value) {
               onTapDown(value);
             },
-            value: widget.values[2],
+            btnKey: widget.values[2],
           ),
           const SizedBox(height: 20),
           const SizedBox(height: 20),
@@ -52,23 +53,23 @@ class _PadState extends State<Pad> {
           const SizedBox(height: 20),
           const SizedBox(height: 20),
           GameButton(
-            onTapUp: (value) {
+            onTapUp: (ButtonDto value) {
               onTapUp(value);
             },
-            onTapDown: (value) {
+            onTapDown: (ButtonDto value) {
               onTapDown(value);
             },
-            value: widget.values[0],
+            btnKey: widget.values[0],
           ),
           const SizedBox(height: 20),
           GameButton(
-            onTapUp: (value) {
+            onTapUp: (ButtonDto value) {
               onTapUp(value);
             },
-            onTapDown: (value) {
+            onTapDown: (ButtonDto value) {
               onTapDown(value);
             },
-            value: widget.values[3],
+            btnKey: widget.values[3],
           ),
           const SizedBox(height: 20),
           const SizedBox(height: 20),
@@ -77,13 +78,13 @@ class _PadState extends State<Pad> {
           const SizedBox(height: 20),
           const SizedBox(height: 20),
           GameButton(
-            onTapUp: (value) {
+            onTapUp: (ButtonDto value) {
               onTapUp(value);
             },
-            onTapDown: (value) {
+            onTapDown: (ButtonDto value) {
               onTapDown(value);
             },
-            value: widget.values[1],
+            btnKey: widget.values[1],
           ),
           const SizedBox(height: 20),
           const SizedBox(height: 20),

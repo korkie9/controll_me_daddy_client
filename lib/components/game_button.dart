@@ -1,3 +1,4 @@
+import 'package:controll_me_daddy/models/button_dto.dart';
 import 'package:flutter/material.dart';
 
 class GameButton extends StatefulWidget {
@@ -5,11 +6,11 @@ class GameButton extends StatefulWidget {
     super.key,
     required this.onTapUp,
     required this.onTapDown,
-    required this.value,
+    required this.btnKey,
   });
-  final ValueSetter<String> onTapDown;
-  final ValueSetter<String> onTapUp;
-  final String value;
+  final ValueSetter<ButtonDto> onTapDown;
+  final ValueSetter<ButtonDto> onTapUp;
+  final int btnKey;
 
   @override
   State<GameButton> createState() => _GameButtonState();
@@ -22,13 +23,17 @@ class _GameButtonState extends State<GameButton> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTapDown: (_) {
-        widget.onTapDown(widget.value);
+        widget.onTapDown(
+          ButtonDto(key: widget.btnKey, value: _isPressed ? 0 : 1),
+        );
         setState(() {
           _isPressed = true;
         });
       },
       onTapUp: ((_) {
-        widget.onTapUp(widget.value);
+        widget.onTapUp(
+          ButtonDto(key: widget.btnKey, value: _isPressed ? 1 : 0),
+        );
 
         setState(() {
           _isPressed = false;

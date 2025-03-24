@@ -1,8 +1,12 @@
+import 'dart:convert';
+
+import 'package:controll_me_daddy/models/button_dto.dart';
+import 'package:controll_me_daddy/models/joystick_dto.dart';
 import 'package:controll_me_daddy/screens/pad.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-//import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/io.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
 void main() {
@@ -42,9 +46,9 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
   void initState() {
     super.initState();
     // Connect to the WebSocket server
-    //_channel = IOWebSocketChannel.connect(
-    //  'ws://21e0-102-217-76-205.ngrok-free.app',
-    //);
+    _channel = IOWebSocketChannel.connect(
+      'ws://2860-102-217-76-205.ngrok-free.app',
+    );
     accelerometerEvents.listen(
       (AccelerometerEvent event) {
         //print(event);
@@ -68,13 +72,25 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
     super.dispose();
   }
 
-  //void _sendMessage() {
-  //  _channel.sink.add('hello world');
-  //}
-  //
-  void _sendKeyPress(String value) {
-    //_channel.sink.add(value);
-    print("hello world");
+  void _sendKeyPress(ButtonDto value) {
+    print(value);
+
+    Map<String, dynamic> data = Map<String, dynamic>();
+    data['key'] = value.key;
+    data['value'] = value.value;
+    final json = jsonEncode(data);
+    _channel.sink.add(json);
+  }
+
+  void _sendJoystickMove(JoystickDto coords) {
+    print(coords);
+
+    Map<String, dynamic> data = Map<String, dynamic>();
+    data['x'] = coords.x * 32767;
+    data['y'] = coords.y * 32767;
+    data['side'] = coords.side;
+    final json = jsonEncode(data);
+    _channel.sink.add(json);
   }
 
   @override
@@ -85,10 +101,6 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            //ElevatedButton(
-            //  onPressed: _sendMessage,
-            //  child: const Text('Send "hello world"'),
-            //),
             Row(
               children: [
                 SizedBox(width: 200),
@@ -108,6 +120,12 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
                   listener: (details) {
                     // Handle joystick movement
                     print("Joystick 1: ${details.x}, ${details.y}");
+                    JoystickDto joystickdto = JoystickDto(
+                      x: details.x,
+                      y: details.y,
+                      side: "right",
+                    );
+                    _sendJoystickMove(joystickdto);
                   },
                 ),
               ],
@@ -115,10 +133,10 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
 
             const SizedBox(height: 50),
             Pad(
-              onPress: ((value) {
+              onPress: ((ButtonDto value) {
                 _sendKeyPress(value);
               }),
-              values: ['up', 'left', 'right', 'down'],
+              values: [308, 307, 305, 304],
             ),
             const SizedBox(height: 50),
 
@@ -126,7 +144,7 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
               onPress: ((value) {
                 _sendKeyPress(value);
               }),
-              values: ['up', 'left', 'right', 'down'],
+              values: [17, 16, 16, 17],
             ),
             const SizedBox(height: 50),
             Row(
@@ -148,6 +166,12 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
                   listener: (details) {
                     // Handle joystick movement
                     print("Joystick 1: ${details.x}, ${details.y}");
+                    JoystickDto joystickdto = JoystickDto(
+                      x: details.x,
+                      y: details.y,
+                      side: "left",
+                    );
+                    _sendJoystickMove(joystickdto);
                   },
                 ),
               ],
