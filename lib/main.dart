@@ -47,7 +47,7 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
     super.initState();
     // Connect to the WebSocket server
     _channel = IOWebSocketChannel.connect(
-      'ws://2860-102-217-76-205.ngrok-free.app',
+      'ws://49a7-102-217-76-205.ngrok-free.app/ws',
     );
     accelerometerEvents.listen(
       (AccelerometerEvent event) {

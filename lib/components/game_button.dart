@@ -32,7 +32,7 @@ class _GameButtonState extends State<GameButton> {
       },
       onTapUp: ((_) {
         widget.onTapUp(
-          ButtonDto(key: widget.btnKey, value: _isPressed ? 1 : 0),
+          ButtonDto(key: widget.btnKey, value: _isPressed ? -1 : 0),
         );
 
         setState(() {
