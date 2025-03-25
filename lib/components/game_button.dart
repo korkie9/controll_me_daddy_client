@@ -7,10 +7,12 @@ class GameButton extends StatefulWidget {
     required this.onTapUp,
     required this.onTapDown,
     required this.btnKey,
+    required this.arrIndex,
   });
   final ValueSetter<ButtonDto> onTapDown;
   final ValueSetter<ButtonDto> onTapUp;
   final int btnKey;
+  final int arrIndex;
 
   @override
   State<GameButton> createState() => _GameButtonState();
@@ -24,16 +26,21 @@ class _GameButtonState extends State<GameButton> {
     return GestureDetector(
       onTapDown: (_) {
         widget.onTapDown(
-          ButtonDto(key: widget.btnKey, value: _isPressed ? 0 : 1),
+          ButtonDto(
+            key: widget.btnKey,
+            value:
+                (widget.btnKey == 17 && widget.arrIndex == 3) ||
+                        (widget.btnKey == 16 && widget.arrIndex == 1)
+                    ? -1
+                    : 1,
+          ),
         );
         setState(() {
           _isPressed = true;
         });
       },
       onTapUp: ((_) {
-        widget.onTapUp(
-          ButtonDto(key: widget.btnKey, value: _isPressed ? -1 : 0),
-        );
+        widget.onTapUp(ButtonDto(key: widget.btnKey, value: 0));
 
         setState(() {
           _isPressed = false;

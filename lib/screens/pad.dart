@@ -45,6 +45,7 @@ class _PadState extends State<Pad> {
               onTapDown(value);
             },
             btnKey: widget.values[2],
+            arrIndex: 2,
           ),
           const SizedBox(height: 20),
           const SizedBox(height: 20),
@@ -60,6 +61,7 @@ class _PadState extends State<Pad> {
               onTapDown(value);
             },
             btnKey: widget.values[0],
+            arrIndex: 0,
           ),
           const SizedBox(height: 20),
           GameButton(
@@ -70,6 +72,7 @@ class _PadState extends State<Pad> {
               onTapDown(value);
             },
             btnKey: widget.values[3],
+            arrIndex: 3,
           ),
           const SizedBox(height: 20),
           const SizedBox(height: 20),
@@ -85,6 +88,7 @@ class _PadState extends State<Pad> {
               onTapDown(value);
             },
             btnKey: widget.values[1],
+            arrIndex: 1,
           ),
           const SizedBox(height: 20),
           const SizedBox(height: 20),
