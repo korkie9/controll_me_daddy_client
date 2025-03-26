@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:controll_me_daddy/components/game_button.dart';
 import 'package:controll_me_daddy/models/button_dto.dart';
 import 'package:controll_me_daddy/models/joystick_dto.dart';
 import 'package:controll_me_daddy/screens/pad.dart';
@@ -47,7 +48,7 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
     super.initState();
     // Connect to the WebSocket server
     _channel = IOWebSocketChannel.connect(
-      'ws://49a7-102-217-76-205.ngrok-free.app/ws',
+      'ws://cd58-102-217-76-205.ngrok-free.app/ws',
     );
     accelerometerEvents.listen(
       (AccelerometerEvent event) {
@@ -86,9 +87,11 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
     print(coords);
 
     Map<String, dynamic> data = Map<String, dynamic>();
-    data['x'] = coords.x * 32767;
+    data['x'] = (coords.x - 0.5).round().clamp(-32768, 32768);
+    data['y'] = (coords.y - 0.5).round().clamp(-32768, 32768);
     data['y'] = coords.y * 32767;
     data['side'] = coords.side;
+    print(coords.toString());
     final json = jsonEncode(data);
     _channel.sink.add(json);
   }
@@ -138,7 +141,29 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
               }),
               values: [308, 307, 305, 304],
             ),
-            const SizedBox(height: 50),
+            SizedBox(
+              height: 25,
+              child: GameButton(
+                onTapUp: (ButtonDto value) {},
+                onTapDown: (ButtonDto value) {
+                  _sendKeyPress(value);
+                },
+                btnKey: 315,
+                arrIndex: 0,
+              ),
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              height: 25,
+              child: GameButton(
+                onTapUp: (ButtonDto value) {},
+                onTapDown: (ButtonDto value) {
+                  _sendKeyPress(value);
+                },
+                btnKey: 314,
+                arrIndex: 0,
+              ),
+            ),
 
             Pad(
               onPress: ((value) {
