@@ -5,6 +5,7 @@ import 'package:controll_me_daddy/models/button_dto.dart';
 import 'package:controll_me_daddy/models/joystick_dto.dart';
 import 'package:controll_me_daddy/screens/pad.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/io.dart';
@@ -47,9 +48,7 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
   void initState() {
     super.initState();
     // Connect to the WebSocket server
-    _channel = IOWebSocketChannel.connect(
-      'ws://4fa0-102-217-76-205.ngrok-free.app/ws',
-    );
+    _channel = IOWebSocketChannel.connect('');
     accelerometerEvents.listen(
       (AccelerometerEvent event) {
         //print(event);
@@ -97,7 +96,9 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -109,7 +110,9 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
                 Joystick(
                   stick: const CircleAvatar(
                     radius: 30,
-                    child: FlutterLogo(size: 50),
+                    backgroundColor:
+                        Colors.blue, // You can change the color as needed
+                    child: SizedBox.shrink(),
                   ),
                   base: Container(
                     width: 100,
@@ -179,10 +182,10 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
                 Joystick(
                   stick: const CircleAvatar(
                     radius: 30,
-                    child: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.blue, // Change color as needed
-                    ),
+                    backgroundColor:
+                        Colors.blue, // You can change the color as needed
+                    child:
+                        SizedBox.shrink(), // Empty center to create a filled circle
                   ),
                   base: Container(
                     width: 100,
@@ -193,12 +196,11 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
                     ),
                   ),
                   listener: (details) {
-                    // Handle joystick movement
                     print("Joystick 1: ${details.x}, ${details.y}");
                     JoystickDto joystickdto = JoystickDto(
-                      x: details.x,
-                      y: details.y,
-                      side: "left",
+                      x: details.y, // Keeping the x/y swap you mentioned
+                      y: details.x,
+                      side: "right",
                     );
                     _sendJoystickMove(joystickdto);
                   },
