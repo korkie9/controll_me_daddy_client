@@ -145,6 +145,7 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
               }),
               values: [308, 307, 305, 304],
             ),
+            const SizedBox(height: 50), //here
             SizedBox(
               height: 25,
               child: GameButton(
@@ -169,6 +170,7 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
               ),
             ),
 
+            const SizedBox(height: 50), // hereeeeeee
             Pad(
               onPress: ((value) {
                 _sendKeyPress(value);
