@@ -48,7 +48,9 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
   void initState() {
     super.initState();
     // Connect to the WebSocket server
-    _channel = IOWebSocketChannel.connect('');
+    _channel = IOWebSocketChannel.connect(
+      'ws://d7e3-102-217-76-205.ngrok-free.app/ws',
+    );
     accelerometerEvents.listen(
       (AccelerometerEvent event) {
         //print(event);
@@ -86,7 +88,8 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
     print(coords);
 
     Map<String, dynamic> data = Map<String, dynamic>();
-    data['x'] = (coords.x);
+    data['x'] =
+        coords.x * -1; // Don't know why but x in server in negative here
     data['y'] = (coords.y);
     data['side'] = coords.side;
     print(coords.toString());
@@ -145,11 +148,15 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
               }),
               values: [308, 307, 305, 304],
             ),
-            const SizedBox(height: 50), //here
+
+            // Pause Button
+            const SizedBox(height: 50),
             SizedBox(
               height: 25,
               child: GameButton(
-                onTapUp: (ButtonDto value) {},
+                onTapUp: (ButtonDto value) {
+                  _sendKeyPress(value);
+                },
                 onTapDown: (ButtonDto value) {
                   _sendKeyPress(value);
                 },
@@ -158,10 +165,14 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
               ),
             ),
             const SizedBox(height: 10),
+
+            // Select Button
             SizedBox(
               height: 25,
               child: GameButton(
-                onTapUp: (ButtonDto value) {},
+                onTapUp: (ButtonDto value) {
+                  _sendKeyPress(value);
+                },
                 onTapDown: (ButtonDto value) {
                   _sendKeyPress(value);
                 },
@@ -170,7 +181,7 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
               ),
             ),
 
-            const SizedBox(height: 50), // hereeeeeee
+            const SizedBox(height: 50),
             Pad(
               onPress: ((value) {
                 _sendKeyPress(value);
@@ -184,10 +195,8 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
                 Joystick(
                   stick: const CircleAvatar(
                     radius: 30,
-                    backgroundColor:
-                        Colors.blue, // You can change the color as needed
-                    child:
-                        SizedBox.shrink(), // Empty center to create a filled circle
+                    backgroundColor: Colors.blue,
+                    child: SizedBox.shrink(),
                   ),
                   base: Container(
                     width: 100,
@@ -200,9 +209,11 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
                   listener: (details) {
                     print("Joystick 1: ${details.x}, ${details.y}");
                     JoystickDto joystickdto = JoystickDto(
-                      x: details.y, // Keeping the x/y swap you mentioned
+                      x:
+                          details
+                              .y, // No idea why x and y are swapped here but don't touch this.
                       y: details.x,
-                      side: "right",
+                      side: "left",
                     );
                     _sendJoystickMove(joystickdto);
                   },
