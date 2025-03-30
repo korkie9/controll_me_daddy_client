@@ -28,7 +28,8 @@ class _WheelScreenState extends State<WheelScreen> {
   @override
   void initState() {
     super.initState();
-    _channel = IOWebSocketChannel.connect(widget.socketEndpoint);
+    _connectToWebSocket();
+
     accelerometerEvents.listen(
       (AccelerometerEvent event) {
         //print(event);
@@ -39,17 +40,71 @@ class _WheelScreenState extends State<WheelScreen> {
         });
       },
       onError: (error) {
-        // Logic to handle error
         // Needed for Android in case sensor is not available
       },
       cancelOnError: true,
     );
   }
 
+  void _connectToWebSocket() {
+    try {
+      _channel = IOWebSocketChannel.connect(widget.socketEndpoint);
+
+      _showSnackbar("Connected successfully", false);
+
+      _channel.stream.listen(
+        (message) {},
+        onError: (error) {
+          _showSnackbar("Connection error: ${error.toString()}", false);
+        },
+        onDone: () {
+          _showSnackbar("Connection closed", true);
+        },
+      );
+    } catch (e) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showSnackbar("Failed to connect: ${e.toString()}", true);
+      });
+    }
+  }
+
   @override
   void dispose() {
     _channel.sink.close();
     super.dispose();
+  }
+
+  void _showSnackbar(String message, bool isError) {
+    if (!mounted) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: isError ? Colors.red : Colors.green,
+          duration: const Duration(seconds: 5),
+          action:
+              isError
+                  ? SnackBarAction(
+                    label: 'Retry',
+                    textColor: Colors.white,
+                    onPressed: () {
+                      _reconnect();
+                    },
+                  )
+                  : null,
+        ),
+      );
+    });
+  }
+
+  void _reconnect() {
+    try {
+      _channel.sink.close();
+      _channel = IOWebSocketChannel.connect(widget.socketEndpoint);
+    } catch (e) {
+      _showSnackbar("Reconnection failed: ${e.toString()}", true);
+    }
   }
 
   void _sendKeyPress(ButtonDto value) {
@@ -67,7 +122,7 @@ class _WheelScreenState extends State<WheelScreen> {
 
     Map<String, dynamic> data = Map<String, dynamic>();
     data['x'] =
-        coords.x * -1; // Don't know why but x in server in negative here
+        coords.x * -1; //NOTE: Don't know why but x in server in negative here
     data['y'] = (coords.y);
     data['side'] = coords.side;
     print(coords.toString());
@@ -189,7 +244,7 @@ class _WheelScreenState extends State<WheelScreen> {
                     JoystickDto joystickdto = JoystickDto(
                       x:
                           details
-                              .y, // No idea why x and y are swapped here but don't touch this.
+                              .y, //NOTE: No idea why x and y are swapped here but don't touch this.
                       y: details.x,
                       side: "left",
                     );

@@ -28,28 +28,63 @@ class _ControllerScreenState extends State<ControllerScreen> {
   @override
   void initState() {
     super.initState();
-    _channel = IOWebSocketChannel.connect(widget.socketEndpoint);
-    //accelerometerEvents.listen(
-    //  (AccelerometerEvent event) {
-    //    //print(event);
-    //    setState(() {
-    //      _x = event.x;
-    //      _y = event.y;
-    //      _z = event.z;
-    //    });
-    //  },
-    //  onError: (error) {
-    //    // Logic to handle error
-    //    // Needed for Android in case sensor is not available
-    //  },
-    //  cancelOnError: true,
-    //);
+
+    try {
+      _channel = IOWebSocketChannel.connect(widget.socketEndpoint);
+
+      _channel.stream.listen(
+        (message) {},
+        onError: (error) {
+          _showSnackbar("Connection error: ${error.toString()}", true);
+        },
+        onDone: () {
+          _showSnackbar("Connection closed", true);
+        },
+      );
+    } catch (e) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showSnackbar("Failed to connect: ${e.toString()}", true);
+      });
+    }
   }
 
   @override
   void dispose() {
     _channel.sink.close();
     super.dispose();
+  }
+
+  void _showSnackbar(String message, bool isError) {
+    if (!mounted) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: isError ? Colors.red : Colors.green,
+          duration: const Duration(seconds: 5),
+          action:
+              isError
+                  ? SnackBarAction(
+                    label: 'Retry',
+                    textColor: Colors.white,
+                    onPressed: () {
+                      _reconnect();
+                    },
+                  )
+                  : null,
+        ),
+      );
+    });
+  }
+
+  void _reconnect() {
+    try {
+      _channel.sink.close();
+      _channel = IOWebSocketChannel.connect(widget.socketEndpoint);
+    } catch (e) {
+      _showSnackbar("Reconnection failed: ${e.toString()}", true);
+    }
   }
 
   void _sendKeyPress(ButtonDto value) {
@@ -104,7 +139,6 @@ class _ControllerScreenState extends State<ControllerScreen> {
                     ),
                   ),
                   listener: (details) {
-                    // Handle joystick movement
                     print("Joystick 1: ${details.x}, ${details.y}");
                     JoystickDto joystickdto = JoystickDto(
                       x:

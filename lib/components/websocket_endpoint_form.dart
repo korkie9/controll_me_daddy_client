@@ -1,3 +1,5 @@
+import 'package:controll_me_daddy/screens/controller_screen.dart';
+import 'package:controll_me_daddy/screens/wheel_screen.dart';
 import 'package:flutter/material.dart';
 
 class WebsocketEndpointForm extends StatefulWidget {
@@ -77,9 +79,17 @@ class WebsocketEndpointFormState extends State<WebsocketEndpointForm> {
             child: ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  //TODO: Change this to navigate to controller on submit
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder:
+                          (context) =>
+                              _character == SingingCharacter.steeringWheel
+                                  ? WheelScreen(socketEndpoint: "sdfsdf")
+                                  : ControllerScreen(socketEndpoint: "fsdfsdf"),
+                    ),
+                  );
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Processing Data')),
+                    const SnackBar(content: Text('Connecting...')),
                   );
                 }
               },
