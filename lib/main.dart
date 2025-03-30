@@ -50,20 +50,6 @@ class _ControllMeDaddyState extends State<ControllMeDaddyState> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [WebsocketEndpointForm()],
         ),
-        //StreamBuilder(
-        //  stream: _channel.stream,
-        //  builder: (context, snapshot) {
-        //    if (snapshot.hasData) {
-        //      // Display messages received from the WebSocket server
-        //      _message = snapshot.data.toString();
-        //    } else if (snapshot.hasError) {
-        //      _message = 'Error: ${snapshot.error}';
-        //    } else {
-        //      _message = 'No message received yet';
-        //    }
-        //    return Text(_message, style: const TextStyle(fontSize: 18));
-        //  },
-        //),
       ),
     );
   }

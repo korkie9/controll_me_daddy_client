@@ -9,7 +9,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/io.dart';
-//import 'package:sensors_plus/sensors_plus.dart';
 
 class ControllerScreen extends StatefulWidget {
   const ControllerScreen({super.key, required this.socketEndpoint});
@@ -21,14 +20,12 @@ class ControllerScreen extends StatefulWidget {
 
 class _ControllerScreenState extends State<ControllerScreen> {
   late WebSocketChannel _channel;
-  //double _x = 0.0;
-  //double _y = 0.0;
-  //double _z = 0.0;
 
   @override
   void initState() {
     super.initState();
 
+    print("printing thing with the thing : ${widget.socketEndpoint}");
     try {
       _channel = IOWebSocketChannel.connect(widget.socketEndpoint);
 
@@ -223,7 +220,7 @@ class _ControllerScreenState extends State<ControllerScreen> {
                     JoystickDto joystickdto = JoystickDto(
                       x:
                           details
-                              .y, // No idea why x and y are swapped here but don't touch this.
+                              .y, // NOTE: No idea why x and y are swapped here but don't touch this.
                       y: details.x,
                       side: "left",
                     );
@@ -232,20 +229,6 @@ class _ControllerScreenState extends State<ControllerScreen> {
                 ),
               ],
             ),
-            //StreamBuilder(
-            //  stream: _channel.stream,
-            //  builder: (context, snapshot) {
-            //    if (snapshot.hasData) {
-            //      // Display messages received from the WebSocket server
-            //      _message = snapshot.data.toString();
-            //    } else if (snapshot.hasError) {
-            //      _message = 'Error: ${snapshot.error}';
-            //    } else {
-            //      _message = 'No message received yet';
-            //    }
-            //    return Text(_message, style: const TextStyle(fontSize: 18));
-            //  },
-            //),
           ],
         ),
       ),

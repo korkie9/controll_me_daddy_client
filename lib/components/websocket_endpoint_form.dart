@@ -16,6 +16,7 @@ enum SingingCharacter { controller, steeringWheel }
 class WebsocketEndpointFormState extends State<WebsocketEndpointForm> {
   SingingCharacter? _character = SingingCharacter.controller;
   final _formKey = GlobalKey<FormState>();
+  final webSocketInputController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +26,7 @@ class WebsocketEndpointFormState extends State<WebsocketEndpointForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextFormField(
+            controller: webSocketInputController,
             style: const TextStyle(color: Colors.white),
             decoration: InputDecoration(
               labelText: 'Websocket Endpoint',
@@ -47,7 +49,7 @@ class WebsocketEndpointFormState extends State<WebsocketEndpointForm> {
           ListTile(
             title: const Text(
               'Controller',
-              style: TextStyle(color: Colors.white), // White text
+              style: TextStyle(color: Colors.white),
             ),
             leading: Radio<SingingCharacter>(
               value: SingingCharacter.controller,
@@ -62,7 +64,7 @@ class WebsocketEndpointFormState extends State<WebsocketEndpointForm> {
           ListTile(
             title: const Text(
               'Steering Wheel',
-              style: TextStyle(color: Colors.white), // White text
+              style: TextStyle(color: Colors.white),
             ),
             leading: Radio<SingingCharacter>(
               value: SingingCharacter.steeringWheel,
@@ -84,8 +86,14 @@ class WebsocketEndpointFormState extends State<WebsocketEndpointForm> {
                       builder:
                           (context) =>
                               _character == SingingCharacter.steeringWheel
-                                  ? WheelScreen(socketEndpoint: "sdfsdf")
-                                  : ControllerScreen(socketEndpoint: "fsdfsdf"),
+                                  ? WheelScreen(
+                                    socketEndpoint:
+                                        webSocketInputController.text,
+                                  )
+                                  : ControllerScreen(
+                                    socketEndpoint:
+                                        webSocketInputController.text,
+                                  ),
                     ),
                   );
                   ScaffoldMessenger.of(context).showSnackBar(
