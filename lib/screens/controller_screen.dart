@@ -20,6 +20,7 @@ class ControllerScreen extends StatefulWidget {
 
 class _ControllerScreenState extends State<ControllerScreen> {
   late WebSocketChannel _channel;
+  bool light = true;
 
   @override
   void initState() {
@@ -112,6 +113,26 @@ class _ControllerScreenState extends State<ControllerScreen> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     return Scaffold(
       backgroundColor: Colors.black,
+      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+
+      // floatingActionButton: Switch(
+      //   value: light,
+      //   activeColor: Colors.red,
+      //   onChanged: (bool value) {
+      //     // This is called when the user toggles the switch.
+      //     setState(() {
+      //       light = value;
+      //     });
+      //   },
+      // ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color.fromRGBO(15, 15, 15, 0),
+        onPressed: () {
+          // Add your onPressed code here!
+        },
+        child: const Icon(Icons.add, color: Colors.white, size: 25),
+      ),
+
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
