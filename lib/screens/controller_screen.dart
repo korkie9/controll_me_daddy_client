@@ -160,7 +160,7 @@ class _ControllerScreenState extends State<ControllerScreen> {
             ),
 
             // Pause Button
-            const SizedBox(height: 50),
+            // const SizedBox(height: 20),
             SizedBox(
               height: 25,
               child: GameButton(
@@ -191,14 +191,13 @@ class _ControllerScreenState extends State<ControllerScreen> {
               ),
             ),
 
-            const SizedBox(height: 25),
+            // const SizedBox(height: 20),
             Pad(
               onPress: ((value) {
                 _sendKeyPress(value);
               }),
               values: [17, 16, 16, 17],
             ),
-            const SizedBox(height: 50),
             Row(
               children: [
                 SizedBox(width: 200),

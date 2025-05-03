@@ -29,6 +29,7 @@ class _PadState extends State<Pad> {
   Widget build(BuildContext context) {
     return Expanded(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           //
           GameButton(

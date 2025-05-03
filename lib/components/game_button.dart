@@ -49,8 +49,8 @@ class _GameButtonState extends State<GameButton> {
         });
       }),
       child: SizedBox(
-        width: widget.size ?? 54,
-        height: widget.size ?? 54,
+        width: widget.size ?? 45,
+        height: widget.size ?? 45,
         child: Image(
           image: AssetImage(
             _isPressed
