@@ -20,7 +20,7 @@ class ControllerScreen extends StatefulWidget {
 
 class _ControllerScreenState extends State<ControllerScreen> {
   late WebSocketChannel _channel;
-  bool light = true;
+  bool accelerometerActivated = true;
 
   @override
   void initState() {
@@ -114,23 +114,43 @@ class _ControllerScreenState extends State<ControllerScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-
-      // floatingActionButton: Switch(
-      //   value: light,
-      //   activeColor: Colors.red,
-      //   onChanged: (bool value) {
-      //     // This is called when the user toggles the switch.
-      //     setState(() {
-      //       light = value;
-      //     });
-      //   },
-      // ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color.fromRGBO(15, 15, 15, 0),
         onPressed: () {
-          // Add your onPressed code here!
+          showModalBottomSheet<void>(
+            context: context,
+            builder: (BuildContext context) {
+              return StatefulBuilder(
+                builder: (BuildContext context, StateSetter setModalState) {
+                  return Container(
+                    height: 200,
+                    color: Colors.blue,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          const Text('Accelerometer'),
+                          Switch(
+                            value: accelerometerActivated,
+                            activeColor: Colors.red,
+                            onChanged: (bool value) {
+                              setState(() {
+                                accelerometerActivated = value;
+                              });
+                              setModalState(() {});
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          );
         },
-        child: const Icon(Icons.add, color: Colors.white, size: 25),
+        child: const Icon(Icons.menu, color: Colors.white, size: 25),
       ),
 
       body: Padding(
