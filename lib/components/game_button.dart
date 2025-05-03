@@ -8,11 +8,13 @@ class GameButton extends StatefulWidget {
     required this.onTapDown,
     required this.btnKey,
     required this.arrIndex,
+    this.size,
   });
   final ValueSetter<ButtonDto> onTapDown;
   final ValueSetter<ButtonDto> onTapUp;
   final int btnKey;
   final int arrIndex;
+  final double? size;
 
   @override
   State<GameButton> createState() => _GameButtonState();
@@ -46,11 +48,15 @@ class _GameButtonState extends State<GameButton> {
           _isPressed = false;
         });
       }),
-      child: Image(
-        image: AssetImage(
-          _isPressed
-              ? 'assets/images/button-pressed.png'
-              : 'assets/images/button.png',
+      child: SizedBox(
+        width: widget.size ?? 54,
+        height: widget.size ?? 54,
+        child: Image(
+          image: AssetImage(
+            _isPressed
+                ? 'assets/images/button-pressed.png'
+                : 'assets/images/button.png',
+          ),
         ),
       ),
     );

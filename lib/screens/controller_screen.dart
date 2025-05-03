@@ -117,6 +117,7 @@ class _ControllerScreenState extends State<ControllerScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Joystick needs to be in row for some reason. Don't touch
             Row(
               children: [
                 SizedBox(width: 200),
@@ -150,7 +151,7 @@ class _ControllerScreenState extends State<ControllerScreen> {
               ],
             ),
 
-            const SizedBox(height: 50),
+            // end of joystick
             Pad(
               onPress: ((ButtonDto value) {
                 _sendKeyPress(value);
@@ -190,7 +191,7 @@ class _ControllerScreenState extends State<ControllerScreen> {
               ),
             ),
 
-            const SizedBox(height: 50),
+            const SizedBox(height: 25),
             Pad(
               onPress: ((value) {
                 _sendKeyPress(value);

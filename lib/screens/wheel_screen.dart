@@ -140,41 +140,6 @@ class _WheelScreenState extends State<WheelScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              children: [
-                SizedBox(width: 200),
-                Joystick(
-                  stick: const CircleAvatar(
-                    radius: 30,
-                    backgroundColor:
-                        Colors.blue, // You can change the color as needed
-                    child: SizedBox.shrink(),
-                  ),
-                  base: Container(
-                    width: 100,
-                    height: 100,
-                    decoration: const BoxDecoration(
-                      color: Colors.grey,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  listener: (details) {
-                    // Handle joystick movement
-                    print("Joystick 1: ${details.x}, ${details.y}");
-                    JoystickDto joystickdto = JoystickDto(
-                      x:
-                          details
-                              .y, // NOTE: I don't know why but y and x and messed up. /
-                      y: details.x,
-                      side: "right",
-                    );
-                    _sendJoystickMove(joystickdto);
-                  },
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 50),
             Pad(
               onPress: ((ButtonDto value) {
                 _sendKeyPress(value);
@@ -222,37 +187,6 @@ class _WheelScreenState extends State<WheelScreen> {
               values: [17, 16, 16, 17],
             ),
             const SizedBox(height: 50),
-            Row(
-              children: [
-                SizedBox(width: 200),
-                Joystick(
-                  stick: const CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Colors.blue,
-                    child: SizedBox.shrink(),
-                  ),
-                  base: Container(
-                    width: 100,
-                    height: 100,
-                    decoration: const BoxDecoration(
-                      color: Colors.grey,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  listener: (details) {
-                    print("Joystick 1: ${details.x}, ${details.y}");
-                    JoystickDto joystickdto = JoystickDto(
-                      x:
-                          details
-                              .y, //NOTE: No idea why x and y are swapped here but don't touch this.
-                      y: details.x,
-                      side: "left",
-                    );
-                    _sendJoystickMove(joystickdto);
-                  },
-                ),
-              ],
-            ),
             //StreamBuilder(
             //  stream: _channel.stream,
             //  builder: (context, snapshot) {

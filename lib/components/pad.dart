@@ -28,15 +28,9 @@ class _PadState extends State<Pad> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: GridView.count(
-        // this produces 2 rows.
-        crossAxisCount: 7,
-        // Generate 100 widgets that display their index in the list.
+      child: Column(
         children: [
           //
-          const SizedBox(height: 20),
-          const SizedBox(height: 20),
-          const SizedBox(height: 20),
           GameButton(
             onTapUp: (ButtonDto value) {
               onTapUp(value);
@@ -47,39 +41,25 @@ class _PadState extends State<Pad> {
             btnKey: widget.values[2],
             arrIndex: 2,
           ),
-          const SizedBox(height: 20),
-          const SizedBox(height: 20),
-          const SizedBox(height: 20),
-          //
-          const SizedBox(height: 20),
-          const SizedBox(height: 20),
-          GameButton(
-            onTapUp: (ButtonDto value) {
-              onTapUp(value);
-            },
-            onTapDown: (ButtonDto value) {
-              onTapDown(value);
-            },
-            btnKey: widget.values[0],
-            arrIndex: 0,
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GameButton(
+                onTapUp: onTapUp,
+                onTapDown: onTapDown,
+                btnKey: widget.values[0],
+                arrIndex: 0,
+              ),
+              SizedBox(width: 40),
+              GameButton(
+                onTapUp: onTapUp,
+                onTapDown: onTapDown,
+                btnKey: widget.values[3],
+                arrIndex: 3,
+              ),
+            ],
           ),
-          const SizedBox(height: 20),
-          GameButton(
-            onTapUp: (ButtonDto value) {
-              onTapUp(value);
-            },
-            onTapDown: (ButtonDto value) {
-              onTapDown(value);
-            },
-            btnKey: widget.values[3],
-            arrIndex: 3,
-          ),
-          const SizedBox(height: 20),
-          const SizedBox(height: 20),
-          //
-          const SizedBox(height: 20),
-          const SizedBox(height: 20),
-          const SizedBox(height: 20),
           GameButton(
             onTapUp: (ButtonDto value) {
               onTapUp(value);
@@ -90,9 +70,6 @@ class _PadState extends State<Pad> {
             btnKey: widget.values[1],
             arrIndex: 1,
           ),
-          const SizedBox(height: 20),
-          const SizedBox(height: 20),
-          const SizedBox(height: 20),
         ],
       ),
     );
