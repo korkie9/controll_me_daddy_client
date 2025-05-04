@@ -64,7 +64,10 @@ class _ControllerScreenState extends State<ControllerScreen> {
             _y = event.y;
             _z = event.z;
           });
-          print("Printing xyz: ${_x} ${_y} ${_z}");
+          // TODO: find a way to only make webhook calls when y is in specific ranges
+          if (_y >= 0.5 && _y <= 1.5) {
+            print("Printing 1");
+          }
         },
         onError: (error) {
           print(error);
