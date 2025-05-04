@@ -176,7 +176,10 @@ class _ControllerScreenState extends State<ControllerScreen> {
                           Switch(
                             value: accelerometerActivated,
                             activeColor: Colors.red,
-                            onChanged: _toggleAccelerometer,
+                            onChanged: (bool value) {
+                              _toggleAccelerometer(value);
+                              setModalState(() {});
+                            },
                           ),
                         ],
                       ),
@@ -202,8 +205,7 @@ class _ControllerScreenState extends State<ControllerScreen> {
                 Joystick(
                   stick: const CircleAvatar(
                     radius: 30,
-                    backgroundColor:
-                        Colors.blue, // You can change the color as needed
+                    backgroundColor: Colors.blue,
                     child: SizedBox.shrink(),
                   ),
                   base: Container(
