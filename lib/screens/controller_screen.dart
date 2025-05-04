@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:controll_me_daddy/components/game_button.dart';
@@ -7,6 +8,7 @@ import 'package:controll_me_daddy/models/joystick_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
+import 'package:sensors_plus/sensors_plus.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/io.dart';
 
@@ -21,10 +23,16 @@ class ControllerScreen extends StatefulWidget {
 class _ControllerScreenState extends State<ControllerScreen> {
   late WebSocketChannel _channel;
   bool accelerometerActivated = true;
+  StreamSubscription<AccelerometerEvent>? _accelerometerSubscription;
+
+  double _x = 0.0;
+  double _y = 0.0;
+  double _z = 0.0;
 
   @override
   void initState() {
     super.initState();
+    _initAccelerometer();
 
     print("printing thing with the thing : ${widget.socketEndpoint}");
     try {
@@ -46,8 +54,42 @@ class _ControllerScreenState extends State<ControllerScreen> {
     }
   }
 
+  void _initAccelerometer() {
+    if (accelerometerActivated) {
+      _accelerometerSubscription = accelerometerEvents.listen(
+        (AccelerometerEvent event) {
+          if (!mounted) return;
+          setState(() {
+            _x = event.x;
+            _y = event.y;
+            _z = event.z;
+          });
+          print("Printing xyz: ${_x} ${_y} ${_z}");
+        },
+        onError: (error) {
+          print(error);
+        },
+        cancelOnError: true,
+      );
+    }
+  }
+
+  void _toggleAccelerometer(bool value) {
+    setState(() {
+      accelerometerActivated = value;
+    });
+
+    _accelerometerSubscription?.cancel();
+    _accelerometerSubscription = null;
+
+    if (value) {
+      _initAccelerometer();
+    }
+  }
+
   @override
   void dispose() {
+    _accelerometerSubscription?.cancel();
     _channel.sink.close();
     super.dispose();
   }
@@ -134,12 +176,7 @@ class _ControllerScreenState extends State<ControllerScreen> {
                           Switch(
                             value: accelerometerActivated,
                             activeColor: Colors.red,
-                            onChanged: (bool value) {
-                              setState(() {
-                                accelerometerActivated = value;
-                              });
-                              setModalState(() {});
-                            },
+                            onChanged: _toggleAccelerometer,
                           ),
                         ],
                       ),
