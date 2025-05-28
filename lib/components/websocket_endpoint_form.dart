@@ -1,5 +1,5 @@
 import 'package:controll_me_daddy/screens/controller_screen.dart';
-import 'package:controll_me_daddy/screens/wheel_screen.dart';
+import 'package:controll_me_daddy/screens/qr_scanner_screen.dart';
 import 'package:flutter/material.dart';
 
 class WebsocketEndpointForm extends StatefulWidget {
@@ -11,10 +11,7 @@ class WebsocketEndpointForm extends StatefulWidget {
   }
 }
 
-enum SingingCharacter { controller, steeringWheel }
-
 class WebsocketEndpointFormState extends State<WebsocketEndpointForm> {
-  SingingCharacter? _character = SingingCharacter.controller;
   final _formKey = GlobalKey<FormState>();
   final webSocketInputController = TextEditingController();
 
@@ -46,36 +43,6 @@ class WebsocketEndpointFormState extends State<WebsocketEndpointForm> {
               return null;
             },
           ),
-          ListTile(
-            title: const Text(
-              'Controller',
-              style: TextStyle(color: Colors.white),
-            ),
-            leading: Radio<SingingCharacter>(
-              value: SingingCharacter.controller,
-              groupValue: _character,
-              onChanged: (SingingCharacter? value) {
-                setState(() {
-                  _character = value;
-                });
-              },
-            ),
-          ),
-          ListTile(
-            title: const Text(
-              'Steering Wheel',
-              style: TextStyle(color: Colors.white),
-            ),
-            leading: Radio<SingingCharacter>(
-              value: SingingCharacter.steeringWheel,
-              groupValue: _character,
-              onChanged: (SingingCharacter? value) {
-                setState(() {
-                  _character = value;
-                });
-              },
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16),
             child: ElevatedButton(
@@ -84,16 +51,9 @@ class WebsocketEndpointFormState extends State<WebsocketEndpointForm> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder:
-                          (context) =>
-                              _character == SingingCharacter.steeringWheel
-                                  ? WheelScreen(
-                                    socketEndpoint:
-                                        webSocketInputController.text,
-                                  )
-                                  : ControllerScreen(
-                                    socketEndpoint:
-                                        webSocketInputController.text,
-                                  ),
+                          (context) => ControllerScreen(
+                            socketEndpoint: webSocketInputController.text,
+                          ),
                     ),
                   );
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -102,6 +62,21 @@ class WebsocketEndpointFormState extends State<WebsocketEndpointForm> {
                 }
               },
               child: const Text('Submit'),
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => QRScannerScreen()),
+                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(const SnackBar(content: Text('Connecting...')));
+              },
+              child: const Text('San QR Code'),
             ),
           ),
         ],
