@@ -47,6 +47,8 @@ class _ControllerScreenState extends State<ControllerScreen> {
           _showSnackbar("Connection closed", true);
         },
       );
+      _channel.ready;
+      _showSnackbar("Success", false);
     } catch (e) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _showSnackbar("Failed to connect: ${e.toString()}", true);
@@ -111,8 +113,8 @@ class _ControllerScreenState extends State<ControllerScreen> {
                   ? SnackBarAction(
                     label: 'Retry',
                     textColor: Colors.white,
-                    onPressed: () {
-                      _reconnect();
+                    onPressed: () async {
+                      await _reconnect();
                     },
                   )
                   : null,
@@ -121,10 +123,12 @@ class _ControllerScreenState extends State<ControllerScreen> {
     });
   }
 
-  void _reconnect() {
+  Future<void> _reconnect() async {
     try {
       _channel.sink.close();
       _channel = IOWebSocketChannel.connect(widget.socketEndpoint);
+      await _channel.ready;
+      _showSnackbar("success", false);
     } catch (e) {
       _showSnackbar("Reconnection failed: ${e.toString()}", true);
     }

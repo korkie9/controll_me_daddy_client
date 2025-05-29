@@ -15,6 +15,7 @@ class QRScannerScreen extends StatefulWidget {
 class QRScannerState extends State<QRScannerScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   Barcode? result;
+  String? data = "";
   QRViewController? controller;
 
   // In order to get hot reload to work we need to pause the camera if the platform
@@ -48,8 +49,12 @@ class QRScannerState extends State<QRScannerScreen> {
     controller.scannedDataStream.listen((scanData) {
       setState(() {
         final code = result?.code;
+        setState(() {
+          data = code;
+        });
         if (code != null && code.isNotEmpty) {
           controller.stopCamera();
+          print("Made itttttttt!!!!!!!!!!!!!!!!!");
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => ControllerScreen(socketEndpoint: code),
