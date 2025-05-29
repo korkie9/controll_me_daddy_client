@@ -25,6 +25,7 @@ class _ControllerScreenState extends State<ControllerScreen> {
   bool accelerometerActivated = true;
   StreamSubscription<AccelerometerEvent>? _accelerometerSubscription;
 
+  // TODO: Make the coords specific to each joystick i.e left and right
   double _x = 0.0;
   double _y = 0.0;
   double _z = 0.0;
@@ -228,15 +229,23 @@ class _ControllerScreenState extends State<ControllerScreen> {
                     ),
                   ),
                   listener: (details) {
-                    print("Joystick 1: ${details.x}, ${details.y}");
-                    JoystickDto joystickdto = JoystickDto(
-                      x:
-                          details
-                              .y, // NOTE: I don't know why but y and x and messed up. /
-                      y: details.x,
-                      side: "right",
-                    );
-                    _sendJoystickMove(joystickdto);
+                    //here
+
+                    if (details.y != _y || details.y != _y) {
+                      setState(() {
+                        _y = details.y;
+                        _x = details.x;
+                      });
+                      JoystickDto joystickdto = JoystickDto(
+                        x:
+                            details
+                                .y, // NOTE: I don't know why but y and x and messed up. /
+                        y: details.x,
+                        side: "right",
+                      );
+                      _sendJoystickMove(joystickdto);
+                      print("Joystick 1: ${details.x}, ${details.y}");
+                    }
                   },
                 ),
               ],
