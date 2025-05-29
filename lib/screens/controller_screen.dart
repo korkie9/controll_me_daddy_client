@@ -61,14 +61,18 @@ class _ControllerScreenState extends State<ControllerScreen> {
       _accelerometerSubscription = accelerometerEvents.listen(
         (AccelerometerEvent event) {
           if (!mounted) return;
-          setState(() {
-            _x = event.x;
-            _y = event.y;
-            _z = event.z;
-          });
           // TODO: find a way to only make webhook calls when y is in specific ranges
-          if (_y >= 0.5 && _y <= 1.5) {
-            print("Printing 1");
+          print(_y);
+          if (_y != event.y) {
+            setState(() {
+              _y = event.y;
+            });
+            JoystickDto joystickdto = JoystickDto(
+              x: _y / 10,
+              y: 0,
+              side: "left",
+            );
+            _sendJoystickMove(joystickdto);
           }
         },
         onError: (error) {
@@ -248,35 +252,35 @@ class _ControllerScreenState extends State<ControllerScreen> {
 
             // Pause Button
             // const SizedBox(height: 20),
-            SizedBox(
-              height: 25,
-              child: GameButton(
-                onTapUp: (ButtonDto value) {
-                  _sendKeyPress(value);
-                },
-                onTapDown: (ButtonDto value) {
-                  _sendKeyPress(value);
-                },
-                btnKey: 315,
-                arrIndex: 0,
-              ),
-            ),
-            const SizedBox(height: 10),
-
-            // Select Button
-            SizedBox(
-              height: 25,
-              child: GameButton(
-                onTapUp: (ButtonDto value) {
-                  _sendKeyPress(value);
-                },
-                onTapDown: (ButtonDto value) {
-                  _sendKeyPress(value);
-                },
-                btnKey: 314,
-                arrIndex: 0,
-              ),
-            ),
+            // SizedBox(
+            //   height: 25,
+            //   child: GameButton(
+            //     onTapUp: (ButtonDto value) {
+            //       _sendKeyPress(value);
+            //     },
+            //     onTapDown: (ButtonDto value) {
+            //       _sendKeyPress(value);
+            //     },
+            //     btnKey: 315,
+            //     arrIndex: 0,
+            //   ),
+            // ),
+            // const SizedBox(height: 10),
+            //
+            // // Select Button
+            // SizedBox(
+            //   height: 25,
+            //   child: GameButton(
+            //     onTapUp: (ButtonDto value) {
+            //       _sendKeyPress(value);
+            //     },
+            //     onTapDown: (ButtonDto value) {
+            //       _sendKeyPress(value);
+            //     },
+            //     btnKey: 314,
+            //     arrIndex: 0,
+            //   ),
+            // ),
 
             // const SizedBox(height: 20),
             Pad(
