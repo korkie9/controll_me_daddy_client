@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:controll_me_daddy/components/game_button.dart';
 import 'package:controll_me_daddy/components/pad.dart';
+import 'package:controll_me_daddy/components/trigger_button.dart';
 import 'package:controll_me_daddy/models/button_dto.dart';
 import 'package:controll_me_daddy/models/joystick_dto.dart';
 import 'package:flutter/material.dart';
@@ -22,20 +21,24 @@ class ControllerScreen extends StatefulWidget {
 
 class _ControllerScreenState extends State<ControllerScreen> {
   late WebSocketChannel _channel;
-  bool accelerometerActivated = true;
+  bool accelerometerActivated = false;
   StreamSubscription<AccelerometerEvent>? _accelerometerSubscription;
+  double triggerKeyGap = 20;
 
   // TODO: Make the coords specific to each joystick i.e left and right
-  double _x = 0.0;
-  double _y = 0.0;
-  double _z = 0.0;
+  double left_x = 0.0;
+  double left_y = 0.0;
+  double left_z = 0.0;
+
+  double right_x = 0.0;
+  double right_y = 0.0;
+  double right_z = 0.0;
 
   @override
   void initState() {
     super.initState();
     _initAccelerometer();
 
-    print("printing thing with the thing : ${widget.socketEndpoint}");
     try {
       _channel = IOWebSocketChannel.connect(widget.socketEndpoint);
 
@@ -62,14 +65,13 @@ class _ControllerScreenState extends State<ControllerScreen> {
       _accelerometerSubscription = accelerometerEvents.listen(
         (AccelerometerEvent event) {
           if (!mounted) return;
-          // TODO: find a way to only make webhook calls when y is in specific ranges
-          print(_y);
-          if (_y != event.y) {
+          print(left_y);
+          if (left_y != event.y) {
             setState(() {
-              _y = event.y;
+              left_y = event.y;
             });
             JoystickDto joystickdto = JoystickDto(
-              x: _y / 10,
+              x: left_y / 10,
               y: 0,
               side: "left",
             );
@@ -213,7 +215,35 @@ class _ControllerScreenState extends State<ControllerScreen> {
             // Joystick needs to be in row for some reason. Don't touch
             Row(
               children: [
-                SizedBox(width: 200),
+                //Trigger buttons 1
+                Expanded(
+                  child: Row(
+                    children: [
+                      TriggerButton(
+                        onTapUp: (ButtonDto value) {
+                          _sendKeyPress(value);
+                        },
+                        onTapDown: (ButtonDto value) {
+                          _sendKeyPress(value);
+                        },
+                        btnKey: 310,
+                        btnName: "R1",
+                      ),
+
+                      SizedBox(width: triggerKeyGap),
+                      TriggerButton(
+                        onTapUp: (ButtonDto value) {
+                          _sendKeyPress(value);
+                        },
+                        onTapDown: (ButtonDto value) {
+                          _sendKeyPress(value);
+                        },
+                        btnKey: 2,
+                        btnName: "R2",
+                      ),
+                    ],
+                  ),
+                ),
                 Joystick(
                   stick: const CircleAvatar(
                     radius: 30,
@@ -231,10 +261,10 @@ class _ControllerScreenState extends State<ControllerScreen> {
                   listener: (details) {
                     //here
 
-                    if (details.y != _y || details.y != _y) {
+                    if (details.y != right_y && details.x != right_x) {
                       setState(() {
-                        _y = details.y;
-                        _x = details.x;
+                        right_y = details.y;
+                        right_x = details.x;
                       });
                       JoystickDto joystickdto = JoystickDto(
                         x:
@@ -290,17 +320,36 @@ class _ControllerScreenState extends State<ControllerScreen> {
             //     arrIndex: 0,
             //   ),
             // ),
-
-            // const SizedBox(height: 20),
             Pad(
               onPress: ((value) {
                 _sendKeyPress(value);
               }),
               values: [17, 16, 16, 17],
             ),
+
             Row(
               children: [
-                SizedBox(width: 200),
+                //Trigger Buttons 2
+                Expanded(
+                  child: Row(
+                    children: [
+                      TriggerButton(
+                        onTapUp: (ButtonDto value) {},
+                        onTapDown: (ButtonDto value) {},
+                        btnKey: 311,
+                        btnName: "L1",
+                      ),
+
+                      SizedBox(width: triggerKeyGap),
+                      TriggerButton(
+                        onTapUp: (ButtonDto value) {},
+                        onTapDown: (ButtonDto value) {},
+                        btnKey: 5,
+                        btnName: "L2",
+                      ),
+                    ],
+                  ),
+                ),
                 Joystick(
                   stick: const CircleAvatar(
                     radius: 30,
@@ -316,15 +365,21 @@ class _ControllerScreenState extends State<ControllerScreen> {
                     ),
                   ),
                   listener: (details) {
-                    print("Joystick 1: ${details.x}, ${details.y}");
-                    JoystickDto joystickdto = JoystickDto(
-                      x:
-                          details
-                              .y, // NOTE: No idea why x and y are swapped here but don't touch this.
-                      y: details.x,
-                      side: "left",
-                    );
-                    _sendJoystickMove(joystickdto);
+                    if (details.y != right_y && details.x != left_x) {
+                      setState(() {
+                        left_y = details.y;
+                        left_x = details.x;
+                      });
+                      JoystickDto joystickdto = JoystickDto(
+                        x:
+                            details
+                                .y, // NOTE: I don't know why but y and x and messed up. /
+                        y: details.x,
+                        side: "right",
+                      );
+                      _sendJoystickMove(joystickdto);
+                      print("Joystick 1: ${details.x}, ${details.y}");
+                    }
                   },
                 ),
               ],
